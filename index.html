@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CHRONO — Precision Stopwatch</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="bg-radial"></div>
+  <div class="scanline"></div>
+
+  <div class="app">
+    <header>
+      <div class="logo">CHRON<span>O</span></div>
+      <div class="status-bar">
+        <div class="status-dot"></div>
+        <div class="status-text">SYS <span id="status-label">READY</span></div>
+        <div class="status-text" id="clock">--:--:--</div>
+      </div>
+    </header>
+
+    <main>
+      <div class="ring-container">
+        <svg class="ring-svg" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+          <circle class="ring-inner-1" cx="150" cy="150" r="130"/>
+          <circle class="ring-inner-2" cx="150" cy="150" r="110"/>
+          <circle class="ring-track" cx="150" cy="150" r="140"/>
+          <circle class="ring-progress-lap" id="ring-lap" cx="150" cy="150" r="140"/>
+          <circle class="ring-progress" id="ring-prog" cx="150" cy="150" r="140"/>
+        </svg>
+        <div class="ring-center">
+          <div class="time-display" id="display">00:00:00</div>
+          <div class="time-ms" id="display-ms">.000</div>
+          <div class="lap-indicator" id="lap-ind">— LAP 0 —</div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="btn btn-secondary btn-lap" id="btn-lap" disabled>LAP</button>
+        <button class="btn btn-main" id="btn-main">START</button>
+        <button class="btn btn-secondary" id="btn-reset" disabled>RST</button>
+      </div>
+    </main>
+
+    <footer>
+      <div class="laps-header">
+        <div class="laps-title">// Lap Records</div>
+        <div class="laps-count" id="laps-count"></div>
+      </div>
+      <div class="laps-list" id="laps-list">
+        <div class="empty-state" id="empty-state">No laps recorded</div>
+      </div>
+    </footer>
+  </div>
+  <script src="script.js"></script>
+</body>
+
+</html>

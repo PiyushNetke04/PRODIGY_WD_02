@@ -1,0 +1,323 @@
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #04080f;
+      --surface: #080e1a;
+      --panel: #0b1220;
+      --cyan: #00f5ff;
+      --cyan-dim: rgba(0,245,255,0.15);
+      --cyan-glow: rgba(0,245,255,0.4);
+      --orange: #ff6b2b;
+      --orange-dim: rgba(255,107,43,0.15);
+      --green: #39ff14;
+      --green-dim: rgba(57,255,20,0.12);
+      --text: #cdd8f0;
+      --muted: #3a4a6b;
+      --border: rgba(0,245,255,0.1);
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Rajdhani', sans-serif;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    /* ── BACKGROUND ── */
+    .bg-grid {
+      position: fixed; inset: 0; z-index: 0;
+      background-image:
+        linear-gradient(rgba(0,245,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,245,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+    .bg-radial {
+      position: fixed; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 50% 50%, rgba(0,245,255,0.04) 0%, transparent 70%),
+        radial-gradient(ellipse 30% 30% at 80% 20%, rgba(255,107,43,0.04) 0%, transparent 60%);
+    }
+    .scanline {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.08) 2px,
+        rgba(0,0,0,0.08) 4px
+      );
+    }
+
+    /* ── LAYOUT ── */
+    .app {
+      position: relative; z-index: 1;
+      height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      grid-template-columns: 1fr;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── HEADER ── */
+    header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 24px 0 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .logo {
+      font-family: 'Orbitron', monospace;
+      font-size: 14px; font-weight: 900;
+      letter-spacing: 6px; color: var(--cyan);
+      text-shadow: 0 0 20px var(--cyan-glow);
+    }
+    .logo span { color: var(--orange); }
+    .status-bar {
+      display: flex; gap: 20px; align-items: center;
+    }
+    .status-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+      animation: pulse-dot 2s infinite;
+    }
+    @keyframes pulse-dot {
+      0%,100% { opacity: 1; } 50% { opacity: 0.3; }
+    }
+    .status-text {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px; letter-spacing: 2px;
+      color: var(--muted); text-transform: uppercase;
+    }
+    #status-label { color: var(--green); transition: color 0.3s; }
+
+    /* ── MAIN ── */
+    main {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 32px; padding: 20px 0;
+    }
+
+    /* ── RING ── */
+    .ring-container {
+      position: relative;
+      width: min(320px, 72vw); height: min(320px, 72vw);
+      flex-shrink: 0;
+    }
+    .ring-svg {
+      width: 100%; height: 100%;
+      transform: rotate(-90deg);
+    }
+    .ring-track {
+      fill: none;
+      stroke: rgba(0,245,255,0.06);
+      stroke-width: 3;
+    }
+    .ring-progress {
+      fill: none;
+      stroke: var(--cyan);
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-dasharray: 879.6;
+      stroke-dashoffset: 879.6;
+      filter: drop-shadow(0 0 6px var(--cyan));
+      transition: stroke-dashoffset 0.05s linear;
+    }
+    .ring-progress-lap {
+      fill: none;
+      stroke: var(--orange);
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-dasharray: 879.6;
+      stroke-dashoffset: 879.6;
+      opacity: 0.5;
+    }
+    .ring-inner-1 {
+      fill: none; stroke: rgba(0,245,255,0.04); stroke-width: 1;
+    }
+    .ring-inner-2 {
+      fill: none; stroke: rgba(0,245,255,0.08); stroke-width: 1;
+      stroke-dasharray: 4 8;
+    }
+
+    .ring-center {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+    }
+    .time-display {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(32px, 8vw, 56px);
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: 2px;
+      line-height: 1;
+      text-shadow: 0 0 30px rgba(0,245,255,0.3);
+      transition: color 0.3s;
+    }
+    .time-display.running { color: var(--cyan); text-shadow: 0 0 30px var(--cyan-glow); }
+    .time-ms {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: clamp(14px, 3vw, 20px);
+      color: var(--orange);
+      letter-spacing: 3px;
+      margin-top: 6px;
+    }
+    .lap-indicator {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px; letter-spacing: 3px;
+      color: var(--muted); margin-top: 12px;
+      text-transform: uppercase;
+      transition: color 0.3s;
+    }
+    .lap-indicator.active { color: var(--orange); }
+
+    /* ── CONTROLS ── */
+    .controls {
+      display: flex; gap: 16px; align-items: center;
+    }
+    .btn {
+      position: relative; overflow: hidden;
+      border: none; cursor: pointer;
+      font-family: 'Orbitron', monospace;
+      font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase;
+      border-radius: 4px;
+      transition: transform 0.15s, box-shadow 0.3s;
+    }
+    .btn::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: rgba(255,255,255,0.06);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .btn:hover::after { opacity: 1; }
+    .btn:active { transform: scale(0.95); }
+
+    .btn-main {
+      width: 80px; height: 80px; border-radius: 50%;
+      font-size: 11px;
+      background: var(--cyan);
+      color: var(--bg);
+      box-shadow: 0 0 30px var(--cyan-glow), inset 0 1px 0 rgba(255,255,255,0.2);
+    }
+    .btn-main:hover { box-shadow: 0 0 50px var(--cyan-glow), inset 0 1px 0 rgba(255,255,255,0.2); transform: scale(1.05); }
+    .btn-main.paused {
+      background: var(--orange);
+      box-shadow: 0 0 30px rgba(255,107,43,0.5), inset 0 1px 0 rgba(255,255,255,0.2);
+    }
+    .btn-main.paused:hover { box-shadow: 0 0 50px rgba(255,107,43,0.6); transform: scale(1.05); }
+
+    .btn-secondary {
+      width: 56px; height: 56px; border-radius: 50%;
+      font-size: 9px;
+      background: var(--panel);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+    }
+    .btn-secondary:hover { color: var(--text); border-color: rgba(0,245,255,0.3); box-shadow: 0 0 20px rgba(0,245,255,0.1); }
+    .btn-secondary:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+
+    .btn-lap { border-color: rgba(255,107,43,0.3); }
+    .btn-lap:hover { color: var(--orange); border-color: var(--orange); box-shadow: 0 0 20px var(--orange-dim); }
+
+    /* ── LAPS PANEL ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 16px 0 20px;
+      max-height: 200px;
+      overflow: hidden;
+    }
+    .laps-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 12px;
+    }
+    .laps-title {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px; letter-spacing: 3px;
+      text-transform: uppercase; color: var(--muted);
+    }
+    .laps-count {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px; color: var(--orange);
+    }
+    .laps-list {
+      display: flex; flex-direction: column; gap: 6px;
+      overflow-y: auto; max-height: 140px;
+      padding-right: 4px;
+    }
+    .laps-list::-webkit-scrollbar { width: 2px; }
+    .laps-list::-webkit-scrollbar-track { background: transparent; }
+    .laps-list::-webkit-scrollbar-thumb { background: var(--muted); border-radius: 2px; }
+
+    .lap-row {
+      display: grid;
+      grid-template-columns: 32px 1fr auto auto;
+      gap: 12px; align-items: center;
+      padding: 8px 12px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 12px;
+      animation: lapIn 0.3s cubic-bezier(0.16,1,0.3,1);
+      position: relative; overflow: hidden;
+    }
+    .lap-row::before {
+      content: '';
+      position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
+      background: var(--cyan);
+    }
+    .lap-row.fastest::before { background: var(--green); }
+    .lap-row.slowest::before { background: var(--orange); }
+    @keyframes lapIn {
+      from { opacity: 0; transform: translateX(-10px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .lap-num { color: var(--muted); font-size: 10px; }
+    .lap-bar-wrap {
+      height: 2px; background: rgba(0,245,255,0.08); border-radius: 1px; overflow: hidden;
+    }
+    .lap-bar {
+      height: 100%; background: var(--cyan); border-radius: 1px;
+      transition: width 0.5s cubic-bezier(0.16,1,0.3,1);
+    }
+    .lap-row.fastest .lap-bar { background: var(--green); }
+    .lap-row.slowest .lap-bar { background: var(--orange); }
+    .lap-time { color: var(--text); letter-spacing: 1px; }
+    .lap-delta { font-size: 9px; letter-spacing: 1px; color: var(--muted); }
+    .lap-delta.fast { color: var(--green); }
+    .lap-delta.slow { color: var(--orange); }
+
+    .empty-state {
+      text-align: center; padding: 24px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px; letter-spacing: 2px;
+      color: var(--muted); text-transform: uppercase;
+    }
+
+    /* ── FLASH ── */
+    .flash {
+      position: fixed; inset: 0; z-index: 100;
+      background: rgba(0,245,255,0.05);
+      pointer-events: none; opacity: 0;
+      animation: flash 0.2s;
+    }
+    @keyframes flash { 0%,100% { opacity: 0; } 50% { opacity: 1; } }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 480px) {
+      .ring-container { width: 260px; height: 260px; }
+      .app { padding: 0 16px; }
+      footer { max-height: 160px; }
+      .laps-list { max-height: 110px; }
+    }
+    @media (min-height: 800px) {
+      footer { max-height: 260px; }
+      .laps-list { max-height: 200px; }
+    }
