@@ -30,6 +30,7 @@ While building this project, I improved my understanding of:
 ## 🔗 Live Demo
 
 https://github.com/PiyushNetke04/PRODIGY_WD_02.git
+https://prodigy-wd-02-taupe.vercel.app/
 
 ## 📌 Internship Task
 
